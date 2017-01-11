@@ -34,9 +34,8 @@ import org.eclipse.kapua.model.id.KapuaIdAdapter;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "userId" },
-         factoryClass = AccessInfoXmlRegistry.class, 
-         factoryMethod = "newAccessInfo")
+@XmlType(propOrder = { "userId" }, //
+        factoryClass = AccessInfoXmlRegistry.class, factoryMethod = "newAccessInfo")
 public interface AccessInfo extends KapuaUpdatableEntity {
 
     public static final String TYPE = "accessInfo";
@@ -44,15 +43,6 @@ public interface AccessInfo extends KapuaUpdatableEntity {
     public default String getType() {
         return TYPE;
     }
-
-    /**
-     * Sets the user id.
-     * 
-     * @param userId
-     *            The user id.
-     * @since 1.0.0
-     */
-    public void setUserId(KapuaId userId);
 
     /**
      * Gets the user id.
@@ -63,4 +53,14 @@ public interface AccessInfo extends KapuaUpdatableEntity {
     @XmlElement(name = "userId")
     @XmlJavaTypeAdapter(KapuaIdAdapter.class)
     public KapuaId getUserId();
+
+    /**
+     * Sets the user id.
+     * 
+     * @param userId
+     *            The user id.
+     * @since 1.0.0
+     */
+    public void setUserId(KapuaId userId);
+
 }

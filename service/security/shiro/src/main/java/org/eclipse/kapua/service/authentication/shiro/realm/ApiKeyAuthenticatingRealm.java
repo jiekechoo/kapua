@@ -32,6 +32,8 @@ import org.eclipse.kapua.service.account.AccountService;
 import org.eclipse.kapua.service.authentication.ApiKeyCredentials;
 import org.eclipse.kapua.service.authentication.credential.Credential;
 import org.eclipse.kapua.service.authentication.credential.CredentialService;
+import org.eclipse.kapua.service.authentication.credential.CredentialSubjectType;
+import org.eclipse.kapua.service.authentication.credential.CredentialType;
 import org.eclipse.kapua.service.authentication.shiro.ApiKeyCredentialsImpl;
 import org.eclipse.kapua.service.user.User;
 import org.eclipse.kapua.service.user.UserService;
@@ -93,10 +95,9 @@ public class ApiKeyAuthenticatingRealm extends AuthenticatingRealm {
 
         //
         // Find credentials
-        // FIXME: manage multiple credentials and multiple credentials type
         final Credential credential;
         try {
-            credential = KapuaSecurityUtils.doPriviledge(() -> credentialService.findByApiKey(tokenApiKey));
+            credential = KapuaSecurityUtils.doPriviledge(() -> credentialService.findByKey(CredentialSubjectType.USER, CredentialType.API_KEY, tokenApiKey));
         } catch (AuthenticationException ae) {
             throw ae;
         } catch (Exception e) {
@@ -109,10 +110,10 @@ public class ApiKeyAuthenticatingRealm extends AuthenticatingRealm {
         }
 
         //
-        // Get the associated user by name
+        // Get the associated user by the subject id
         final User user;
         try {
-            user = KapuaSecurityUtils.doPriviledge(() -> userService.find(credential.getScopeId(), credential.getUserId()));
+            user = KapuaSecurityUtils.doPriviledge(() -> userService.find(credential.getScopeId(), credential.getSubjectId()));
         } catch (AuthenticationException ae) {
             throw ae;
         } catch (Exception e) {
@@ -147,10 +148,7 @@ public class ApiKeyAuthenticatingRealm extends AuthenticatingRealm {
 
         //
         // BuildAuthenticationInfo
-        return new LoginAuthenticationInfo(getName(),
-                account,
-                user,
-                credential);
+        return new LoginAuthenticationInfo(getName(), credential);
     }
 
     @Override
@@ -162,8 +160,9 @@ public class ApiKeyAuthenticatingRealm extends AuthenticatingRealm {
 
         Subject currentSubject = SecurityUtils.getSubject();
         Session session = currentSubject.getSession();
-        session.setAttribute("scopeId", kapuaInfo.getUser().getScopeId());
-        session.setAttribute("userId", kapuaInfo.getUser().getId());
+        session.setAttribute("scopeId", kapuaInfo.getScopeId());
+        session.setAttribute("subjectType", kapuaInfo.getSubjectType());
+        session.setAttribute("subjectId", kapuaInfo.getSubjectId());
     }
 
     @Override

@@ -20,14 +20,15 @@ import org.eclipse.kapua.service.authentication.ApiKeyCredentials;
 import org.eclipse.kapua.service.authentication.CredentialsFactory;
 import org.eclipse.kapua.service.authentication.JwtCredentials;
 import org.eclipse.kapua.service.authentication.UsernamePasswordCredentials;
+import org.eclipse.kapua.service.authentication.credential.CredentialSubjectType;
 
 @TestService
 @KapuaProvider
 public class CredentialsFactoryMock implements CredentialsFactory {
 
     @Override
-    public UsernamePasswordCredentials newUsernamePasswordCredentials(String username, char[] password) {
-        return new UsernamePasswordCredentialsMock(username, password);
+    public UsernamePasswordCredentials newUsernamePasswordCredentials(CredentialSubjectType subjectType, String username, char[] password) {
+        return new UsernamePasswordCredentialsMock(subjectType, username, password);
     }
 
     @Override

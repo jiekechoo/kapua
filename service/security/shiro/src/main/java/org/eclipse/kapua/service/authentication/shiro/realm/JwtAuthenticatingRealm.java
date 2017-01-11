@@ -34,7 +34,7 @@ import org.eclipse.kapua.service.account.Account;
 import org.eclipse.kapua.service.account.AccountService;
 import org.eclipse.kapua.service.authentication.ApiKeyCredentials;
 import org.eclipse.kapua.service.authentication.credential.Credential;
-import org.eclipse.kapua.service.authentication.credential.CredentialSubject;
+import org.eclipse.kapua.service.authentication.credential.CredentialSubjectType;
 import org.eclipse.kapua.service.authentication.credential.CredentialType;
 import org.eclipse.kapua.service.authentication.credential.shiro.CredentialImpl;
 import org.eclipse.kapua.service.authentication.shiro.JwtCredentialsImpl;
@@ -132,14 +132,17 @@ public class JwtAuthenticatingRealm extends AuthenticatingRealm {
 
         //
         // Create credential
-        Credential credential = new CredentialImpl(user.getScopeId(), user.getId(), CredentialType.JWT, jwt, CredentialSubject.USER, user.getId());
+        Credential credential = new CredentialImpl( //
+                user.getScopeId(), //
+                CredentialSubjectType.USER, //
+                user.getId(), //
+                CredentialType.JWT, //
+                null, //
+                jwt);
 
         //
         // Build AuthenticationInfo
-        return new LoginAuthenticationInfo(getName(),
-                account,
-                user,
-                credential);
+        return new LoginAuthenticationInfo(getName(), credential);
     }
 
     @Override
@@ -151,8 +154,9 @@ public class JwtAuthenticatingRealm extends AuthenticatingRealm {
 
         Subject currentSubject = SecurityUtils.getSubject();
         Session session = currentSubject.getSession();
-        session.setAttribute("scopeId", kapuaInfo.getUser().getScopeId());
-        session.setAttribute("userId", kapuaInfo.getUser().getId());
+        session.setAttribute("scopeId", kapuaInfo.getScopeId());
+        session.setAttribute("subjectType", kapuaInfo.getSubjectType());
+        session.setAttribute("subjectId", kapuaInfo.getSubjectId());
     }
 
     @Override

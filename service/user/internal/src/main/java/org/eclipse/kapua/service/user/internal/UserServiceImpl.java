@@ -38,8 +38,7 @@ import org.eclipse.kapua.service.user.UserType;
  *
  */
 @KapuaProvider
-public class UserServiceImpl extends AbstractKapuaConfigurableService implements UserService
-{
+public class UserServiceImpl extends AbstractKapuaConfigurableService implements UserService {
 
     private static final long serialVersionUID = 4319929212203916781L;
     private final KapuaLocator locator = KapuaLocator.getInstance();
@@ -52,7 +51,7 @@ public class UserServiceImpl extends AbstractKapuaConfigurableService implements
     public UserServiceImpl() {
         super(UserService.class.getName(), userDomain, UserEntityManagerFactory.getInstance());
     }
-    
+
     @Override
     public User create(UserCreator userCreator)
             throws KapuaException {
@@ -173,25 +172,25 @@ public class UserServiceImpl extends AbstractKapuaConfigurableService implements
         return entityManagerSession.onResult(em -> UserDAO.find(em, userId));
     }
 
-    @Override
-    public User findByName(String name)
-            throws KapuaException {
-        // Validation of the fields
-        ArgumentValidator.notEmptyOrNull(name, "name");
-
-        // Do the find
-        return entityManagerSession.onResult(em -> {
-            User user = UserDAO.findByName(em, name);
-            //
-            // Check Access
-            if (user != null) {
-                AuthorizationService authorizationService = locator.getService(AuthorizationService.class);
-                PermissionFactory permissionFactory = locator.getFactory(PermissionFactory.class);
-                authorizationService.checkPermission(permissionFactory.newPermission(userDomain, Actions.read, user.getScopeId()));
-            }
-            return user;
-        });
-    }
+    // @Override
+    // public User findByName(String name)
+    // throws KapuaException {
+    // // Validation of the fields
+    // ArgumentValidator.notEmptyOrNull(name, "name");
+    //
+    // // Do the find
+    // return entityManagerSession.onResult(em -> {
+    // User user = UserDAO.findByName(em, name);
+    // //
+    // // Check Access
+    // if (user != null) {
+    // AuthorizationService authorizationService = locator.getService(AuthorizationService.class);
+    // PermissionFactory permissionFactory = locator.getFactory(PermissionFactory.class);
+    // authorizationService.checkPermission(permissionFactory.newPermission(userDomain, Actions.read, user.getScopeId()));
+    // }
+    // return user;
+    // });
+    // }
 
     @Override
     public UserListResult query(KapuaQuery<User> query)

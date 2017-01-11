@@ -14,7 +14,6 @@ package org.eclipse.kapua.test.authentication;
 
 import org.eclipse.kapua.KapuaException;
 import org.eclipse.kapua.commons.security.KapuaSecurityUtils;
-import org.eclipse.kapua.commons.security.KapuaSession;
 import org.eclipse.kapua.locator.KapuaLocator;
 import org.eclipse.kapua.locator.KapuaProvider;
 import org.eclipse.kapua.locator.guice.TestService;
@@ -22,7 +21,6 @@ import org.eclipse.kapua.service.authentication.AuthenticationService;
 import org.eclipse.kapua.service.authentication.LoginCredentials;
 import org.eclipse.kapua.service.authentication.SessionCredentials;
 import org.eclipse.kapua.service.authentication.token.AccessToken;
-import org.eclipse.kapua.service.user.User;
 import org.eclipse.kapua.service.user.UserService;
 
 @TestService
@@ -42,10 +40,10 @@ public class AuthenticationServiceMock implements AuthenticationService {
 
         KapuaLocator serviceLocator = KapuaLocator.getInstance();
         UserService userService = serviceLocator.getService(UserService.class);
-        User user = userService.findByName(usrPwdCredentialsMock.getUsername());
+        // User user = userService.findByName(usrPwdCredentialsMock.getUsername());
 
-        KapuaSession kapuaSession = new KapuaSession(null, user.getScopeId(), user.getId());
-        KapuaSecurityUtils.setSession(kapuaSession);
+        // KapuaSession kapuaSession = new KapuaSession(null, user.getScopeId(), user.getId());
+        // KapuaSecurityUtils.setSession(kapuaSession);
         // TODO Auto-generated method stub
         return null;
     }

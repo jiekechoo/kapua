@@ -16,9 +16,10 @@ import java.util.Date;
 
 import org.eclipse.kapua.model.KapuaObjectFactory;
 import org.eclipse.kapua.model.id.KapuaId;
+import org.eclipse.kapua.service.authentication.credential.CredentialSubjectType;
 
 /**
- * Access token factory service definition.
+ * {@link AccessToken} factory definition.
  * 
  * @since 1.0
  * 
@@ -30,8 +31,10 @@ public interface AccessTokenFactory extends KapuaObjectFactory {
      * 
      * @param scopeId
      *            The scopeId of the new {@link AccessToken}.
-     * @param userId
-     *            The userId owner of the new {@link AccessToken}.
+     * @param subjectType
+     *            The {@link CredentialSubjectType} to set.
+     * @param subjectId
+     *            The subject id to set.
      * @param tokenId
      *            The tokenId of the new {@link AccessToken}.
      * @param expiresOn
@@ -39,8 +42,13 @@ public interface AccessTokenFactory extends KapuaObjectFactory {
      * 
      * @return A new instance of {@link AccessToken}.
      * 
-     * @since 1.0
+     * @since 1.0.0
      */
-    public AccessTokenCreator newCreator(KapuaId scopeId, KapuaId userId, String tokenId, Date expiresOn);
+    public AccessTokenCreator newCreator(
+            KapuaId scopeId,
+            CredentialSubjectType subjectYpe,
+            KapuaId subjectId,
+            String tokenId,
+            Date expiresOn);
 
 }

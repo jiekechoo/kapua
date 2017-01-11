@@ -19,7 +19,7 @@ package org.eclipse.kapua.service.authentication.credential;
  * @since 1.0
  * 
  */
-public enum CredentialSubject
+public enum CredentialSubjectType
 {
     USER,
     DEVICE,

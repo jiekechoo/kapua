@@ -11,24 +11,26 @@ package org.eclipse.kapua.test;
  * Eurotech - initial API and implementation
  *******************************************************************************/
 
+import static org.eclipse.kapua.commons.setting.system.SystemSettingKey.DB_JDBC_CONNECTION_URL_RESOLVER;
 
 import java.util.Random;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.eclipse.kapua.KapuaException;
-import org.eclipse.kapua.commons.jpa.*;
+import org.eclipse.kapua.commons.jpa.AbstractEntityManagerFactory;
+import org.eclipse.kapua.commons.jpa.EntityManagerSession;
+import org.eclipse.kapua.commons.jpa.SimpleSqlScriptExecutor;
 import org.eclipse.kapua.commons.security.KapuaSecurityUtils;
 import org.eclipse.kapua.locator.KapuaLocator;
 import org.eclipse.kapua.model.id.KapuaId;
 import org.eclipse.kapua.service.authentication.AuthenticationService;
 import org.eclipse.kapua.service.authentication.CredentialsFactory;
+import org.eclipse.kapua.service.authentication.credential.CredentialSubjectType;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static org.eclipse.kapua.commons.setting.system.SystemSettingKey.DB_JDBC_CONNECTION_URL_RESOLVER;
 
 public class KapuaTest extends Assert {
 
@@ -45,7 +47,6 @@ public class KapuaTest extends Assert {
     @Before
     public void setUp() {
 
-
         LOG.debug("Setting up test...");
         if (!isInitialized) {
             LOG.debug("Kapua test context is not initialized. Initializing...");
@@ -57,7 +58,7 @@ public class KapuaTest extends Assert {
 
                 AuthenticationService authenticationService = locator.getService(AuthenticationService.class);
                 CredentialsFactory credentialsFactory = locator.getFactory(CredentialsFactory.class);
-                authenticationService.login(credentialsFactory.newUsernamePasswordCredentials(username, password.toCharArray()));
+                authenticationService.login(credentialsFactory.newUsernamePasswordCredentials(CredentialSubjectType.USER, username, password.toCharArray()));
 
                 //
                 // Get current user Id
@@ -100,9 +101,12 @@ public class KapuaTest extends Assert {
     /**
      * Generates a random {@link String} from the given parameters
      *
-     * @param chars length of the generated {@link String}
-     * @param letters whether or not use chars
-     * @param numbers whether or not use numbers
+     * @param chars
+     *            length of the generated {@link String}
+     * @param letters
+     *            whether or not use chars
+     * @param numbers
+     *            whether or not use numbers
      *
      * @return the generated {@link String}
      */
@@ -118,6 +122,5 @@ public class KapuaTest extends Assert {
         EntityManagerSession entityManagerSession = new EntityManagerSession(entityManagerFactory);
         entityManagerSession.onTransactedAction(entityManager -> new SimpleSqlScriptExecutor().scanScripts(fileFilter).executeUpdate(entityManager));
     }
-
 
 }

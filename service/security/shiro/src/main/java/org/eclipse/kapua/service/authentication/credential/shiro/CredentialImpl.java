@@ -29,7 +29,7 @@ import org.eclipse.kapua.commons.model.AbstractKapuaUpdatableEntity;
 import org.eclipse.kapua.commons.model.id.KapuaEid;
 import org.eclipse.kapua.model.id.KapuaId;
 import org.eclipse.kapua.service.authentication.credential.Credential;
-import org.eclipse.kapua.service.authentication.credential.CredentialSubject;
+import org.eclipse.kapua.service.authentication.credential.CredentialSubjectType;
 import org.eclipse.kapua.service.authentication.credential.CredentialType;
 
 @XmlRootElement
@@ -37,7 +37,7 @@ import org.eclipse.kapua.service.authentication.credential.CredentialType;
 @Entity(name = "Credential")
 @Table(name = "atht_credential")
 /**
- * Credential implementation.
+ * {@link Credential} implementation.
  * 
  * @since 1.0
  *
@@ -46,29 +46,27 @@ public class CredentialImpl extends AbstractKapuaUpdatableEntity implements Cred
 
     private static final long serialVersionUID = -7921424688644169175L;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "subject_type", updatable = false, nullable = false)
+    private CredentialSubjectType subjectType;
+
     @Embedded
     @AttributeOverrides({
-                          @AttributeOverride(name = "eid", column = @Column(name = "user_id", updatable = false, nullable = false))
+            @AttributeOverride(name = "eid", column = @Column(name = "subject_id", updatable = false, nullable = false))
     })
-    private KapuaEid          userId;
+    private KapuaEid subjectId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "credential_type", updatable = false, nullable = false)
-    private CredentialType    credentialType;
+    @Column(name = "type", updatable = false, nullable = false)
+    private CredentialType type;
 
     @Basic
-    @Column(name = "credential_key", nullable = false)
-    private String            credentialKey;
-    
-    @Enumerated(EnumType.STRING)
-    @Column(name = "credential_subject", updatable = false, nullable = false)
-    private CredentialSubject credentialSubject;
-    
-    @Embedded
-    @AttributeOverrides({
-                          @AttributeOverride(name = "eid", column = @Column(name = "credential_subject_id", updatable = false, nullable = false))
-    })
-    private KapuaEid          credentialSubjectId;
+    @Column(name = "key", updatable = false, nullable = false)
+    private String key;
+
+    @Basic
+    @Column(name = "secret", updatable = false, nullable = false)
+    private String secret;
 
     /**
      * Constructor
@@ -82,69 +80,79 @@ public class CredentialImpl extends AbstractKapuaUpdatableEntity implements Cred
      * 
      * @param scopeId
      * @param userId
-     * @param credentialType
+     * @param type
      * @param credentialKey
      */
-    public CredentialImpl(KapuaId scopeId, KapuaId userId, CredentialType credentialType, String credentialKey, CredentialSubject credentialSubject, KapuaId credentialSubjectId)
+    public CredentialImpl(KapuaId scopeId,//
+            CredentialSubjectType subjectType, //
+            KapuaId subjectId,//
+            CredentialType type,//
+            String key,//
+            String cryptedSecret) //
     {
         super(scopeId);
-        this.userId = (KapuaEid) userId;
-        this.credentialType = credentialType;
-        this.credentialKey = credentialKey;
-        this.credentialSubject = credentialSubject;
-        this.credentialSubjectId = (KapuaEid) credentialSubjectId;
+        setSubjectType(subjectType);
+        setSubjectId(subjectId);
+
+        setCredentialType(type);
+        setKey(key);
+        setSecret(cryptedSecret);
     }
 
     @Override
-    public KapuaId getUserId() {
-        return userId;
+    public CredentialSubjectType getSubjectType() {
+        return subjectType;
+    }
+
+    @Override
+    public void setSubjectType(CredentialSubjectType subjectType) {
+        this.subjectType = subjectType;
+
+    }
+
+    @Override
+    public KapuaId getSubjectId() {
+        return subjectId;
+    }
+
+    @Override
+    public void setSubjectId(KapuaId subjectId) {
+        if (subjectId != null) {
+            this.subjectId = new KapuaEid(subjectId);
+        } else {
+            this.subjectId = null;
+        }
     }
 
     @Override
     public CredentialType getCredentialType() {
-        return credentialType;
-    }
-
-    @Override
-    public String getCredentialKey() {
-        return credentialKey;
-    }
-
-    @Override
-    public void setUserId(KapuaId userId) {
-        this.userId = (KapuaEid)userId;
+        return type;
     }
 
     @Override
     public void setCredentialType(CredentialType credentialType) {
-        this.credentialType = credentialType;
-        
+        this.type = credentialType;
+
     }
 
     @Override
-    public void setCredentialKey(String credentialKey) {
-        this.credentialKey = credentialKey;
+    public String getKey() {
+        return key;
     }
 
     @Override
-    public CredentialSubject getCredentialSubject() {
-        return credentialSubject;
+    public void setKey(String credentialKey) {
+        this.key = credentialKey;
     }
 
     @Override
-    public void setCredentialSubject(CredentialSubject credentialSubject) {
-        this.credentialSubject = credentialSubject;
-        
+    public String getSecret() {
+        return secret;
     }
 
     @Override
-    public KapuaId getCredentialSubjectId() {
-        return credentialSubjectId;
-    }
-
-    @Override
-    public void setCredentialSubjectId(KapuaId credentialSubjectId) {
-        this.credentialSubjectId = (KapuaEid)credentialSubjectId;
+    public void setSecret(String secret) {
+        this.secret = secret;
     }
 
 }

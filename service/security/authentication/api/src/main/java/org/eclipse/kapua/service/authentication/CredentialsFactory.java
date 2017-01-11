@@ -13,11 +13,12 @@
 package org.eclipse.kapua.service.authentication;
 
 import org.eclipse.kapua.model.KapuaObjectFactory;
+import org.eclipse.kapua.service.authentication.credential.CredentialSubjectType;
 
 /**
- * {@link CredentialsFactory} factory definition.
+ * {@link Credentials} factory definition.
  * 
- * @since 1.0
+ * @since 1.0.0
  * 
  */
 public interface CredentialsFactory extends KapuaObjectFactory {
@@ -25,13 +26,14 @@ public interface CredentialsFactory extends KapuaObjectFactory {
     /**
      * Creates a new {@link UsernamePasswordCredentials} instance based on provided username and password
      * 
+     * @param subjectType
      * @param username
      * @param password
      * @return
      * 
-     * @since 1.0
+     * @since 1.0.0
      */
-    public UsernamePasswordCredentials newUsernamePasswordCredentials(String username, char[] password);
+    public UsernamePasswordCredentials newUsernamePasswordCredentials(CredentialSubjectType subjectType, String username, char[] password);
 
     /**
      * Creates a new {@link ApiKeyCredentials} instance based on provided api key
@@ -39,7 +41,7 @@ public interface CredentialsFactory extends KapuaObjectFactory {
      * @param apiKey
      * @return
      * 
-     * @since 1.0
+     * @since 1.0.0
      */
     public ApiKeyCredentials newApiKeyCredentials(String apiKey);
 
@@ -49,7 +51,7 @@ public interface CredentialsFactory extends KapuaObjectFactory {
      * @param jwt
      * @return
      * 
-     * @since 1.0
+     * @since 1.0.0
      */
     public JwtCredentials newJwtCredentials(String jwt);
 
@@ -59,7 +61,7 @@ public interface CredentialsFactory extends KapuaObjectFactory {
      * @param tokenId
      * @return
      * 
-     * @since 1.0
+     * @since 1.0.0
      */
     public AccessTokenCredentials newAccessTokenCredentials(String tokenId);
 

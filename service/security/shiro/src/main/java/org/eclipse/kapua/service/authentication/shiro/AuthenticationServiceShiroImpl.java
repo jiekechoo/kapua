@@ -40,6 +40,7 @@ import org.eclipse.kapua.locator.KapuaProvider;
 import org.eclipse.kapua.service.authentication.AuthenticationService;
 import org.eclipse.kapua.service.authentication.LoginCredentials;
 import org.eclipse.kapua.service.authentication.SessionCredentials;
+import org.eclipse.kapua.service.authentication.credential.CredentialSubjectType;
 import org.eclipse.kapua.service.authentication.shiro.setting.KapuaAuthenticationSetting;
 import org.eclipse.kapua.service.authentication.shiro.setting.KapuaAuthenticationSettingKeys;
 import org.eclipse.kapua.service.authentication.shiro.utils.RSAUtil;
@@ -126,8 +127,8 @@ public class AuthenticationServiceShiroImpl implements AuthenticationService {
         // Parse login credentials
         AuthenticationToken shiroAuthenticationToken;
         if (loginCredentials instanceof UsernamePasswordCredentialsImpl) {
-            shiroAuthenticationToken = new UsernamePasswordCredentialsImpl(((UsernamePasswordCredentialsImpl) loginCredentials).getUsername(),
-                    ((UsernamePasswordCredentialsImpl) loginCredentials).getPassword());
+            UsernamePasswordCredentialsImpl userPassCredentialImpl = (UsernamePasswordCredentialsImpl) loginCredentials;
+            shiroAuthenticationToken = new UsernamePasswordCredentialsImpl(userPassCredentialImpl.getSubjectType(), userPassCredentialImpl.getUsername(), userPassCredentialImpl.getPassword());
         } else if (loginCredentials instanceof ApiKeyCredentialsImpl) {
             shiroAuthenticationToken = new ApiKeyCredentialsImpl(((ApiKeyCredentialsImpl) loginCredentials).getApiKey());
         } else if (loginCredentials instanceof JwtCredentialsImpl) {
@@ -332,7 +333,8 @@ public class AuthenticationServiceShiroImpl implements AuthenticationService {
         //
         // Extract userId and scope id from the shiro session
         KapuaEid scopeId = (KapuaEid) session.getAttribute("scopeId");
-        KapuaEid userId = (KapuaEid) session.getAttribute("userId");
+        CredentialSubjectType subjectType = (CredentialSubjectType) session.getAttribute("subjectType");
+        KapuaEid subjectId = (KapuaEid) session.getAttribute("subjectId");
 
         //
         // Create the access token
@@ -349,7 +351,7 @@ public class AuthenticationServiceShiroImpl implements AuthenticationService {
         String jwt = generateToken(session, now, ttl);
 
         // Persist token
-        AccessTokenCreator accessTokenCreator = accessTokenFactory.newCreator(scopeId, userId, jwt, new Date(now.getTime() + ttl));
+        AccessTokenCreator accessTokenCreator = accessTokenFactory.newCreator(scopeId, subjectId, jwt, new Date(now.getTime() + ttl));
         AccessToken accessToken;
         try {
             accessToken = KapuaSecurityUtils.doPriviledge(() -> accessTokenService.create(accessTokenCreator));

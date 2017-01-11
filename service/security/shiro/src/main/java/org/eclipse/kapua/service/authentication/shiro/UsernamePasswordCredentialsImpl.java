@@ -16,6 +16,7 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.eclipse.kapua.service.authentication.AuthenticationCredentials;
 import org.eclipse.kapua.service.authentication.UsernamePasswordCredentials;
+import org.eclipse.kapua.service.authentication.credential.CredentialSubjectType;
 
 /**
  * Username and password {@link AuthenticationCredentials} implementation.
@@ -27,18 +28,30 @@ public class UsernamePasswordCredentialsImpl extends UsernamePasswordToken imple
 
     private static final long serialVersionUID = -7549848672967689716L;
 
+    private CredentialSubjectType subjectType;
     private String username;
     private char[] password;
 
     /**
-     * Constructor
+     * Constructor.
      * 
      * @param username
      * @param password
      */
-    public UsernamePasswordCredentialsImpl(String username, char[] password) {
-        this.username = username;
-        this.password = password;
+    public UsernamePasswordCredentialsImpl(CredentialSubjectType subjectType, String username, char[] password) {
+        setSubjectType(subjectType);
+        setUsername(username);
+        setPassword(password);
+    }
+
+    @Override
+    public CredentialSubjectType getSubjectType() {
+        return subjectType;
+    }
+
+    @Override
+    public void setSubjectType(CredentialSubjectType subjectType) {
+        this.subjectType = subjectType;
     }
 
     @Override

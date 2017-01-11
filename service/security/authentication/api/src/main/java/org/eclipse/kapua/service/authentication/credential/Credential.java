@@ -24,23 +24,23 @@ import org.eclipse.kapua.model.id.KapuaId;
 import org.eclipse.kapua.model.id.KapuaIdAdapter;
 
 /**
- * Credential definition.<br>
- * Used to handle credentials needed by the various authentication algorithms.
+ * {@link Credential} definition.<br>
+ * {@link Credential} entity is used to manage credentials that can be used to access the platform.
  * 
- * @since 1.0
- *
+ * @since 1.0.0
  */
 @XmlRootElement(name = "credential")
 @XmlAccessorType(XmlAccessType.PROPERTY)
-@XmlType(propOrder = { "userId", 
-                       "credentialType",
-                       "credentialKey",
-                       "credentialSubject",
-                       "credentialSubjectId"},
-        factoryClass = CredentialXmlRegistry.class, 
-        factoryMethod = "newCredential")
-public interface Credential extends KapuaUpdatableEntity
-{
+@XmlType(propOrder = {
+        "subjectType", //
+        "subjectId", //
+        "credentialType", //
+        "key",//
+        "secret",//
+}, //
+        factoryClass = CredentialXmlRegistry.class, factoryMethod = "newCredential")
+public interface Credential extends KapuaUpdatableEntity {
+
     public static final String TYPE = "credential";
 
     public default String getType() {
@@ -48,71 +48,94 @@ public interface Credential extends KapuaUpdatableEntity
     }
 
     /**
-     * Return the user identifier
+     * Returns the {@link CredentialSubjectType} of this {@link Credential}.
      * 
-     * @return
+     * @return The {@link CredentialSubjectType} of this {@link Credential}.
+     * @since 1.0.0
      */
-    @XmlElement(name = "userId")
+    @XmlElement(name = "subjectType")
+    public CredentialSubjectType getSubjectType();
+
+    /**
+     * Sets the {@link CredentialSubjectType} of this {@link Credential}.
+     * 
+     * @param subjectType
+     *            The {@link CredentialSubjectType} of this {@link Credential}.
+     * @since 1.0.0
+     */
+    public void setSubjectType(CredentialSubjectType subjectType);
+
+    /**
+     * Returns the {@link Credential} subject id.
+     * 
+     * @return The {@link Credential} subject id.
+     * @since 1.0.0
+     */
+    @XmlElement(name = "subjectId")
     @XmlJavaTypeAdapter(KapuaIdAdapter.class)
-    public KapuaId getUserId();
+    public KapuaId getSubjectId();
 
     /**
-     * Sets the user identifier
-     */
-    public void setUserId(KapuaId userId);
-
-    /**
-     * Return the credential type
+     * Sets the {@link Credential} subject id.
      * 
-     * @return
+     * @param subjectId
+     *            The {@link Credential} subject id.
+     * @since 1.0.0
+     */
+    public void setSubjectId(KapuaId subjectId);
+
+    /**
+     * Returns the {@link Credential} type.
+     * 
+     * @return The {@link Credential} type.
+     * @since 1.0.0
      */
     @XmlElement(name = "credentialType")
     public CredentialType getCredentialType();
 
     /**
-     * Sets the user credential type
+     * Sets the {@link CredentialType}.
+     * 
+     * @param type
+     *            The {@link CredentialType}.
+     * @since 1.0.0
      */
-    public void setCredentialType(CredentialType credentialType);
+    public void setCredentialType(CredentialType type);
 
     /**
-     * Return the credential key
+     * Returns the {@link Credential} key.
      * 
-     * @return
+     * @return The {@link Credential} key.
+     * @since 1.0.0
      */
-    @XmlElement(name = "credentialKey")
-    public String getCredentialKey();
+    @XmlElement(name = "key")
+    public String getKey();
 
     /**
-     * Sets the credential key
+     * Sets the {@link Credential} key
      * 
-     * @param credentialKey
+     * @param key
+     *            The {@link Credential} key
+     * @since 1.0.0
      */
-    public void setCredentialKey(String credentialKey);
-    
+    public void setKey(String key);
+
     /**
-     * Return the credential subject
+     * Returns the {@link Credential} secret.
      * 
-     * @return
+     * @return The {@link Credential} secret.
+     * @since 1.0.0
      */
-    @XmlElement(name = "credentialSubject")
-    public CredentialSubject getCredentialSubject();
-    
+    @XmlElement(name = "secret")
+    public String getSecret();
+
     /**
-     * Sets the user credential subject
-     */
-    public void setCredentialSubject(CredentialSubject credentialSubject);
-    
-    /**
-     * Return the credential subject id
+     * Sets the {@link Credential} secret.
      * 
-     * @return
+     * @param secret
+     *            The {@link Credential} secret.
+     * @since 1.0.0
      */
-    @XmlElement(name = "credentialSubjectId")
-    public KapuaId getCredentialSubjectId();
-    
-    /**
-     * Sets the user credential subject id
-     */
-    public void setCredentialSubjectId(KapuaId credentialSubjectId);
-    
+    public void setSecret(String secret);
+
 }
