@@ -31,11 +31,11 @@ import org.eclipse.kapua.model.id.KapuaId;
 import org.eclipse.kapua.service.authentication.credential.CredentialCreator;
 import org.eclipse.kapua.service.authentication.credential.CredentialFactory;
 import org.eclipse.kapua.service.authentication.credential.CredentialService;
-import org.eclipse.kapua.service.authentication.credential.CredentialSubjectType;
 import org.eclipse.kapua.service.authentication.credential.CredentialType;
 import org.eclipse.kapua.service.authorization.access.AccessInfoFactory;
 import org.eclipse.kapua.service.authorization.access.AccessInfoService;
 import org.eclipse.kapua.service.authorization.permission.PermissionFactory;
+import org.eclipse.kapua.service.authorization.subject.SubjectType;
 import org.eclipse.kapua.service.user.User;
 import org.eclipse.kapua.service.user.UserCreator;
 import org.eclipse.kapua.service.user.UserFactory;
@@ -119,7 +119,7 @@ public class GwtUserServiceImpl extends KapuaRemoteServiceServlet implements Gwt
             // FIXME add Credential Subject interface
             CredentialCreator credentialCreator = credentialFactory.newCreator(//
                     scopeId,
-                    CredentialSubjectType.USER,
+                    SubjectType.USER,
                     user.getId(),
                     CredentialType.PASSWORD,
                     user.getName(),

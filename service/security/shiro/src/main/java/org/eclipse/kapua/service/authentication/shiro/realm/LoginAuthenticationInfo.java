@@ -17,12 +17,12 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.eclipse.kapua.model.id.KapuaId;
 import org.eclipse.kapua.service.authentication.credential.Credential;
-import org.eclipse.kapua.service.authentication.credential.CredentialSubjectType;
+import org.eclipse.kapua.service.authorization.subject.Subject;
 
 /**
  * Kapua {@link AuthenticationInfo} implementation
  * 
- * @since 1.0
+ * @since 1.0.0
  *
  */
 public class LoginAuthenticationInfo implements AuthenticationInfo {
@@ -58,12 +58,12 @@ public class LoginAuthenticationInfo implements AuthenticationInfo {
         return credentials.getScopeId();
     }
 
-    public CredentialSubjectType getSubjectType() {
-        return credentials.getSubjectType();
-    }
-
-    public KapuaId getSubjectId() {
-        return credentials.getSubjectId();
+    public Subject getSubject() {
+        if (getCredentials() != null) {
+            return ((Credential) getCredentials()).getSubject();
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -73,6 +73,6 @@ public class LoginAuthenticationInfo implements AuthenticationInfo {
 
     @Override
     public PrincipalCollection getPrincipals() {
-        return new SimplePrincipalCollection(getCredentials(), getRealmName());
+        return new SimplePrincipalCollection(getSubject(), getRealmName());
     }
 }

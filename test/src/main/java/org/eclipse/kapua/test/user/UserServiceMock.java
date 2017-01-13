@@ -14,6 +14,7 @@ package org.eclipse.kapua.test.user;
 
 import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.kapua.KapuaException;
@@ -98,19 +99,17 @@ public class UserServiceMock implements UserService {
         return users.get(userId);
     }
 
-    // @Override
-    // public User findByName(String name)
-    // throws KapuaException
-    // {
-    // Iterator<UserMock> userMocks = users.values().iterator();
-    // while(userMocks.hasNext())
-    // {
-    // UserMock userMock = userMocks.next();
-    // if (userMock.getName() != null && userMock.getName().equals(name))
-    // return userMock;
-    // }
-    // throw KapuaException.internalError("User not found");
-    // }
+    @Override
+    public User findByName(String name)
+            throws KapuaException {
+        Iterator<UserMock> userMocks = users.values().iterator();
+        while (userMocks.hasNext()) {
+            UserMock userMock = userMocks.next();
+            if (userMock.getName() != null && userMock.getName().equals(name))
+                return userMock;
+        }
+        throw KapuaException.internalError("User not found");
+    }
 
     @Override
     public UserListResult query(KapuaQuery<User> query)

@@ -40,7 +40,6 @@ import org.eclipse.kapua.locator.KapuaProvider;
 import org.eclipse.kapua.service.authentication.AuthenticationService;
 import org.eclipse.kapua.service.authentication.LoginCredentials;
 import org.eclipse.kapua.service.authentication.SessionCredentials;
-import org.eclipse.kapua.service.authentication.credential.CredentialSubjectType;
 import org.eclipse.kapua.service.authentication.shiro.setting.KapuaAuthenticationSetting;
 import org.eclipse.kapua.service.authentication.shiro.setting.KapuaAuthenticationSettingKeys;
 import org.eclipse.kapua.service.authentication.shiro.utils.RSAUtil;
@@ -58,9 +57,9 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 /**
- * Authentication service implementation.
+ * {@link AuthenticationService} implementation.
  * 
- * since 1.0
+ * since 1.0.0
  * 
  */
 @KapuaProvider
@@ -159,22 +158,22 @@ public class AuthenticationServiceShiroImpl implements AuthenticationService {
 
             //
             // Set some logging
-            MDC.put(KapuaSecurityUtils.MDC_USER_ID, accessToken.getUserId().toCompactId());
+            MDC.put(KapuaSecurityUtils.MDC_USER_ID, accessToken.getSubject().getSubjectType().name().concat(accessToken.getSubject().getId().toCompactId()));
             logger.info("Login for thread '{}' - '{}' - '{}'", new Object[] { Thread.currentThread().getId(), Thread.currentThread().getName(), shiroSubject.toString() });
 
         } catch (ShiroException se) {
 
             KapuaAuthenticationException kae;
             if (se instanceof UnknownAccountException) {
-                kae = new KapuaAuthenticationException(KapuaAuthenticationErrorCodes.UNKNOWN_LOGIN_CREDENTIAL, se, shiroAuthenticationToken.getPrincipal());
+                kae = new KapuaAuthenticationException(KapuaAuthenticationErrorCodes.UNKNOWN_LOGIN_CREDENTIAL, se, shiroAuthenticationToken.getCredentials());
             } else if (se instanceof DisabledAccountException) {
-                kae = new KapuaAuthenticationException(KapuaAuthenticationErrorCodes.DISABLED_LOGIN_CREDENTIAL, se, shiroAuthenticationToken.getPrincipal());
+                kae = new KapuaAuthenticationException(KapuaAuthenticationErrorCodes.DISABLED_LOGIN_CREDENTIAL, se, shiroAuthenticationToken.getCredentials());
             } else if (se instanceof LockedAccountException) {
-                kae = new KapuaAuthenticationException(KapuaAuthenticationErrorCodes.LOCKED_LOGIN_CREDENTIAL, se, shiroAuthenticationToken.getPrincipal());
+                kae = new KapuaAuthenticationException(KapuaAuthenticationErrorCodes.LOCKED_LOGIN_CREDENTIAL, se, shiroAuthenticationToken.getCredentials());
             } else if (se instanceof IncorrectCredentialsException) {
-                kae = new KapuaAuthenticationException(KapuaAuthenticationErrorCodes.INVALID_LOGIN_CREDENTIALS, se, shiroAuthenticationToken.getPrincipal());
+                kae = new KapuaAuthenticationException(KapuaAuthenticationErrorCodes.INVALID_LOGIN_CREDENTIALS, se, shiroAuthenticationToken.getCredentials());
             } else if (se instanceof ExpiredCredentialsException) {
-                kae = new KapuaAuthenticationException(KapuaAuthenticationErrorCodes.EXPIRED_LOGIN_CREDENTIALS, se, shiroAuthenticationToken.getPrincipal());
+                kae = new KapuaAuthenticationException(KapuaAuthenticationErrorCodes.EXPIRED_LOGIN_CREDENTIALS, se, shiroAuthenticationToken.getCredentials());
             } else {
                 throw KapuaAuthenticationException.internalError(se);
             }
@@ -204,12 +203,12 @@ public class AuthenticationServiceShiroImpl implements AuthenticationService {
 
         //
         // Login the user
-        Subject currentUser = null;
+        Subject currentShiroSubject = null;
         try {
             //
             // Shiro login
-            currentUser = SecurityUtils.getSubject();
-            currentUser.login(shiroAuthenticationToken);
+            currentShiroSubject = SecurityUtils.getSubject();
+            currentShiroSubject.login(shiroAuthenticationToken);
 
             //
             // Retrieve token
@@ -217,32 +216,32 @@ public class AuthenticationServiceShiroImpl implements AuthenticationService {
 
             //
             // Enstablish session
-            enstablishSession(currentUser, accessToken);
+            enstablishSession(currentShiroSubject, accessToken);
 
             //
             // Set some logging
             Subject shiroSubject = SecurityUtils.getSubject();
-            MDC.put(KapuaSecurityUtils.MDC_USER_ID, accessToken.getUserId().toCompactId());
+            MDC.put(KapuaSecurityUtils.MDC_USER_ID, accessToken.getSubject().getSubjectType().name().concat(accessToken.getSubject().getId().toCompactId()));
             logger.info("Login for thread '{}' - '{}' - '{}'", new Object[] { Thread.currentThread().getId(), Thread.currentThread().getName(), shiroSubject.toString() });
         } catch (ShiroException se) {
 
             KapuaAuthenticationException kae;
             if (se instanceof UnknownAccountException) {
-                kae = new KapuaAuthenticationException(KapuaAuthenticationErrorCodes.UNKNOWN_SESSION_CREDENTIAL, se, shiroAuthenticationToken.getPrincipal());
+                kae = new KapuaAuthenticationException(KapuaAuthenticationErrorCodes.UNKNOWN_SESSION_CREDENTIAL, se, shiroAuthenticationToken.getCredentials());
             } else if (se instanceof DisabledAccountException) {
-                kae = new KapuaAuthenticationException(KapuaAuthenticationErrorCodes.DISABLED_SESSION_CREDENTIAL, se, shiroAuthenticationToken.getPrincipal());
+                kae = new KapuaAuthenticationException(KapuaAuthenticationErrorCodes.DISABLED_SESSION_CREDENTIAL, se, shiroAuthenticationToken.getCredentials());
             } else if (se instanceof LockedAccountException) {
-                kae = new KapuaAuthenticationException(KapuaAuthenticationErrorCodes.LOCKED_SESSION_CREDENTIAL, se, shiroAuthenticationToken.getPrincipal());
+                kae = new KapuaAuthenticationException(KapuaAuthenticationErrorCodes.LOCKED_SESSION_CREDENTIAL, se, shiroAuthenticationToken.getCredentials());
             } else if (se instanceof IncorrectCredentialsException) {
-                kae = new KapuaAuthenticationException(KapuaAuthenticationErrorCodes.INVALID_SESSION_CREDENTIALS, se, shiroAuthenticationToken.getPrincipal());
+                kae = new KapuaAuthenticationException(KapuaAuthenticationErrorCodes.INVALID_SESSION_CREDENTIALS, se, shiroAuthenticationToken.getCredentials());
             } else if (se instanceof ExpiredCredentialsException) {
-                kae = new KapuaAuthenticationException(KapuaAuthenticationErrorCodes.EXPIRED_SESSION_CREDENTIALS, se, shiroAuthenticationToken.getPrincipal());
+                kae = new KapuaAuthenticationException(KapuaAuthenticationErrorCodes.EXPIRED_SESSION_CREDENTIALS, se, shiroAuthenticationToken.getCredentials());
             } else {
                 throw KapuaAuthenticationException.internalError(se);
             }
 
-            if (currentUser != null) {
-                currentUser.logout();
+            if (currentShiroSubject != null) {
+                currentShiroSubject.logout();
             }
             throw kae;
         }
@@ -333,8 +332,7 @@ public class AuthenticationServiceShiroImpl implements AuthenticationService {
         //
         // Extract userId and scope id from the shiro session
         KapuaEid scopeId = (KapuaEid) session.getAttribute("scopeId");
-        CredentialSubjectType subjectType = (CredentialSubjectType) session.getAttribute("subjectType");
-        KapuaEid subjectId = (KapuaEid) session.getAttribute("subjectId");
+        org.eclipse.kapua.service.authorization.subject.Subject subject = (org.eclipse.kapua.service.authorization.subject.Subject) session.getAttribute("subject");
 
         //
         // Create the access token
@@ -351,7 +349,13 @@ public class AuthenticationServiceShiroImpl implements AuthenticationService {
         String jwt = generateToken(session, now, ttl);
 
         // Persist token
-        AccessTokenCreator accessTokenCreator = accessTokenFactory.newCreator(scopeId, subjectId, jwt, new Date(now.getTime() + ttl));
+        AccessTokenCreator accessTokenCreator = accessTokenFactory.newCreator(//
+                scopeId, //
+                subject.getSubjectType(), //
+                subject.getId(), //
+                jwt, //
+                new Date(now.getTime() + ttl));
+
         AccessToken accessToken;
         try {
             accessToken = KapuaSecurityUtils.doPriviledge(() -> accessTokenService.create(accessTokenCreator));
@@ -362,10 +366,10 @@ public class AuthenticationServiceShiroImpl implements AuthenticationService {
         return accessToken;
     }
 
-    private void enstablishSession(Subject subject, AccessToken accessToken) {
-        KapuaSession kapuaSession = new KapuaSession(accessToken, accessToken.getScopeId(), accessToken.getUserId());
+    private void enstablishSession(Subject shiroSubject, AccessToken accessToken) {
+        KapuaSession kapuaSession = new KapuaSession(accessToken, accessToken.getScopeId(), accessToken.getSubject());
         KapuaSecurityUtils.setSession(kapuaSession);
-        subject.getSession().setAttribute(KapuaSession.KAPUA_SESSION_KEY, kapuaSession);
+        shiroSubject.getSession().setAttribute(KapuaSession.KAPUA_SESSION_KEY, kapuaSession);
     }
 
     private String generateToken(Session session, Date now, long ttl) {
@@ -387,14 +391,15 @@ public class AuthenticationServiceShiroImpl implements AuthenticationService {
 
         // Kapua claims
         KapuaEid scopeId = (KapuaEid) session.getAttribute("scopeId");
-        KapuaEid userId = (KapuaEid) session.getAttribute("userId");
+        org.eclipse.kapua.service.authorization.subject.Subject subject = (org.eclipse.kapua.service.authorization.subject.Subject) session.getAttribute("subject");
 
         // Jwts.builder().setIssuer(issuer)
         // .setIssuedAt(issuedAtDate)
         // .setExpiration(new Date(expiresOnDate))
         // .setSubject(userId.getShortId()).claims.setClaim("sId", scopeId.getShortId());
-        claims.setSubject(userId.toCompactId());
         claims.setClaim("sId", scopeId.toCompactId());
+        claims.setClaim("type", subject.getSubjectType().name());
+        claims.setSubject(subject.getId().toCompactId());
 
         String jwt = null;
         try {

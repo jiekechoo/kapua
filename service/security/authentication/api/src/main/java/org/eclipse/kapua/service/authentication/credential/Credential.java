@@ -17,11 +17,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.eclipse.kapua.model.KapuaUpdatableEntity;
-import org.eclipse.kapua.model.id.KapuaId;
-import org.eclipse.kapua.model.id.KapuaIdAdapter;
+import org.eclipse.kapua.service.authorization.subject.Subject;
 
 /**
  * {@link Credential} definition.<br>
@@ -32,8 +30,7 @@ import org.eclipse.kapua.model.id.KapuaIdAdapter;
 @XmlRootElement(name = "credential")
 @XmlAccessorType(XmlAccessType.PROPERTY)
 @XmlType(propOrder = {
-        "subjectType", //
-        "subjectId", //
+        "subject", //
         "credentialType", //
         "key",//
         "secret",//
@@ -48,41 +45,22 @@ public interface Credential extends KapuaUpdatableEntity {
     }
 
     /**
-     * Returns the {@link CredentialSubjectType} of this {@link Credential}.
+     * Returns the {@link Subject} of this {@link Credential}.
      * 
-     * @return The {@link CredentialSubjectType} of this {@link Credential}.
+     * @return The {@link Subject} of this {@link Credential}.
      * @since 1.0.0
      */
-    @XmlElement(name = "subjectType")
-    public CredentialSubjectType getSubjectType();
+    @XmlElement(name = "subject")
+    public Subject getSubject();
 
     /**
-     * Sets the {@link CredentialSubjectType} of this {@link Credential}.
+     * Sets the {@link Subject} of this {@link Credential}.
      * 
-     * @param subjectType
-     *            The {@link CredentialSubjectType} of this {@link Credential}.
+     * @param subject
+     *            The {@link Subject} of this {@link Credential}.
      * @since 1.0.0
      */
-    public void setSubjectType(CredentialSubjectType subjectType);
-
-    /**
-     * Returns the {@link Credential} subject id.
-     * 
-     * @return The {@link Credential} subject id.
-     * @since 1.0.0
-     */
-    @XmlElement(name = "subjectId")
-    @XmlJavaTypeAdapter(KapuaIdAdapter.class)
-    public KapuaId getSubjectId();
-
-    /**
-     * Sets the {@link Credential} subject id.
-     * 
-     * @param subjectId
-     *            The {@link Credential} subject id.
-     * @since 1.0.0
-     */
-    public void setSubjectId(KapuaId subjectId);
+    public void setSubject(Subject subject);
 
     /**
      * Returns the {@link Credential} type.

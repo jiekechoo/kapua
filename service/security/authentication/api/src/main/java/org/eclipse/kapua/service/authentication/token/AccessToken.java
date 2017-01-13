@@ -18,14 +18,12 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.eclipse.kapua.model.KapuaUpdatableEntity;
-import org.eclipse.kapua.model.id.KapuaId;
-import org.eclipse.kapua.model.id.KapuaIdAdapter;
 import org.eclipse.kapua.service.authentication.credential.Credential;
-import org.eclipse.kapua.service.authentication.credential.CredentialSubjectType;
+import org.eclipse.kapua.service.authorization.subject.Subject;
 
 /**
  * {@link AccessToken} entity.<br>
@@ -42,8 +40,7 @@ import org.eclipse.kapua.service.authentication.credential.CredentialSubjectType
 @XmlRootElement(name = "accessToken")
 @XmlAccessorType(XmlAccessType.PROPERTY)
 @XmlType(propOrder = {
-        "subjectType", //
-        "subjectId", //
+        "subject", //
         "tokenId", //
         "expiresOn",//
 })// , //
@@ -52,46 +49,28 @@ public interface AccessToken extends KapuaUpdatableEntity {
 
     static public final String TYPE = "accessToken";
 
+    @XmlTransient
     default public String getType() {
         return TYPE;
     }
 
     /**
-     * Returns the {@link CredentialSubjectType} of this {@link AccessToken}.
+     * Returns the {@link Subject} of this {@link AccessToken}.
      * 
-     * @return The {@link CredentialSubjectType} of this {@link AccessToken}.
+     * @return The {@link Subject} of this {@link AccessToken}.
      * @since 1.0.0
      */
-    @XmlElement(name = "subjectType")
-    public CredentialSubjectType getSubjectType();
+    @XmlElement(name = "subject")
+    public Subject getSubject();
 
     /**
-     * Sets the {@link CredentialSubjectType} of this {@link AccessToken}.
+     * Sets the {@link Subject} of this {@link AccessToken}.
      * 
-     * @param subjectType
-     *            The {@link CredentialSubjectType} of this {@link AccessToken}.
+     * @param subject
+     *            The {@link Subject} of this {@link AccessToken}.
      * @since 1.0.0
      */
-    public void setSubjectType(CredentialSubjectType subjectType);
-
-    /**
-     * Returns the {@link AccessToken} subject id.
-     * 
-     * @return The {@link AccessToken} subject id.
-     * @since 1.0.0
-     */
-    @XmlElement(name = "subjectId")
-    @XmlJavaTypeAdapter(KapuaIdAdapter.class)
-    public KapuaId getSubjectId();
-
-    /**
-     * Sets the {@link AccessToken} subject id.
-     * 
-     * @param subjectId
-     *            The {@link AccessToken} subject id.
-     * @since 1.0.0
-     */
-    public void setSubjectId(KapuaId subjectId);
+    public void setSubject(Subject subject);
 
     /**
      * Return the token identifier

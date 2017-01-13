@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 /**
  * {@link UsernamePasswordCredentials} based {@link AuthenticatingRealm} implementation.
  * 
- * since 1.0
+ * @since 1.0.0
  * 
  */
 public class UserPassAuthenticatingRealm extends AuthenticatingRealm {
@@ -133,8 +133,7 @@ public class UserPassAuthenticatingRealm extends AuthenticatingRealm {
         Subject currentSubject = SecurityUtils.getSubject();
         Session session = currentSubject.getSession();
         session.setAttribute("scopeId", kapuaInfo.getScopeId());
-        session.setAttribute("subjectType", kapuaInfo.getSubjectType());
-        session.setAttribute("subjectId", kapuaInfo.getSubjectId());
+        session.setAttribute("subject", kapuaInfo.getSubject());
     }
 
     @Override

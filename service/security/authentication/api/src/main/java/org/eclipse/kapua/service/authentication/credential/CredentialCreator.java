@@ -22,6 +22,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.eclipse.kapua.model.KapuaEntityCreator;
 import org.eclipse.kapua.model.id.KapuaId;
 import org.eclipse.kapua.model.id.KapuaIdAdapter;
+import org.eclipse.kapua.service.authorization.subject.SubjectType;
 
 /**
  * {@link Credential} creator definition.
@@ -42,22 +43,22 @@ import org.eclipse.kapua.model.id.KapuaIdAdapter;
 public interface CredentialCreator extends KapuaEntityCreator<Credential> {
 
     /**
-     * Returns the {@link CredentialSubjectType} of this {@link CredentialCreator}.
+     * Returns the {@link SubjectType} of this {@link CredentialCreator}.
      * 
-     * @return The {@link CredentialSubjectType} of this {@link CredentialCreator}.
+     * @return The {@link SubjectType} of this {@link CredentialCreator}.
      * @since 1.0.0
      */
     @XmlElement(name = "subjectType")
-    public CredentialSubjectType getSubjectType();
+    public SubjectType getSubjectType();
 
     /**
-     * Sets the {@link CredentialSubjectType} of this {@link CredentialCreator}.
+     * Sets the {@link SubjectType} of this {@link CredentialCreator}.
      * 
      * @param subjectType
-     *            The {@link CredentialSubjectType} of this {@link CredentialCreator}.
+     *            The {@link SubjectType} of this {@link CredentialCreator}.
      * @since 1.0.0
      */
-    public void setSubjectType(CredentialSubjectType subjectType);
+    public void setSubjectType(SubjectType subjectType);
 
     /**
      * Return the {@link Credential} subject id.

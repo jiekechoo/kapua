@@ -20,8 +20,10 @@ package org.eclipse.kapua.service.authentication.token;
  */
 public class AccessTokenPredicates {
 
-    public static final String TOKEN_SUBJECT_TYPE = "subjectType";
-    public static final String TOKEN_SUBJECT_ID = "subjectId";
+    public static final String SUBJECT = "subject";
+    public static final String SUBJECT_TYPE = SUBJECT + ".subjectType";
+    public static final String SUBJECT_ID = SUBJECT + ".subjectId";
+
     public static final String TOKEN_ID = "tokenId";
     public static final String USER_ID = "userId";
 

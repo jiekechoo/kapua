@@ -19,7 +19,7 @@ CREATE TABLE atht_credential (
   modified_by            	BIGINT(21)    UNSIGNED,
   
   subject_type				VARCHAR(64)   NOT NULL,
-  subject_id				BIGINT(21)	  UNSIGNED NOT NULL,
+  subject_id				BIGINT(21)	  UNSIGNED,
 
   type						VARCHAR(64)	  NOT NULL,
   key						VARCHAR(255)  NOT NULL,

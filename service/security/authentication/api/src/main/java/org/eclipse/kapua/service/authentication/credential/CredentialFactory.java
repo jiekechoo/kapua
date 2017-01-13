@@ -14,6 +14,7 @@ package org.eclipse.kapua.service.authentication.credential;
 
 import org.eclipse.kapua.model.KapuaObjectFactory;
 import org.eclipse.kapua.model.id.KapuaId;
+import org.eclipse.kapua.service.authorization.subject.SubjectType;
 
 /**
  * {@link Credential} factory service definition.
@@ -36,7 +37,7 @@ public interface CredentialFactory extends KapuaObjectFactory {
      * @param scopeId
      *            The scope id to set.
      * @param subjectType
-     *            The {@link CredentialSubjectType} to set.
+     *            The {@link SubjectType} to set.
      * @param subjectId
      *            The subject id to set.
      * @param type
@@ -49,7 +50,7 @@ public interface CredentialFactory extends KapuaObjectFactory {
      */
     public CredentialCreator newCreator(
             KapuaId scopeId,
-            CredentialSubjectType subjectType,
+            SubjectType subjectType,
             KapuaId subjectId,
             CredentialType type,
             String key,

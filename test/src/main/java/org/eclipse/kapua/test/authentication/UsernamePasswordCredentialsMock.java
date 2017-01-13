@@ -13,27 +13,27 @@
 package org.eclipse.kapua.test.authentication;
 
 import org.eclipse.kapua.service.authentication.UsernamePasswordCredentials;
-import org.eclipse.kapua.service.authentication.credential.CredentialSubjectType;
+import org.eclipse.kapua.service.authorization.subject.SubjectType;
 
 public class UsernamePasswordCredentialsMock implements UsernamePasswordCredentials {
 
-    private CredentialSubjectType subjectType;
+    private SubjectType subjectType;
     private String username;
     private char[] password;
 
-    public UsernamePasswordCredentialsMock(CredentialSubjectType subjectType, String username, char[] password) {
+    public UsernamePasswordCredentialsMock(SubjectType subjectType, String username, char[] password) {
         setSubjectType(subjectType);
         setUsername(username);
         setPassword(password);
     }
 
     @Override
-    public CredentialSubjectType getSubjectType() {
+    public SubjectType getSubjectType() {
         return subjectType;
     }
 
     @Override
-    public void setSubjectType(CredentialSubjectType subjectType) {
+    public void setSubjectType(SubjectType subjectType) {
         this.subjectType = subjectType;
     }
 

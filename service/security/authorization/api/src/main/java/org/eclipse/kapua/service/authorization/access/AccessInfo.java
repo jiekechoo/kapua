@@ -17,24 +17,22 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.eclipse.kapua.model.KapuaUpdatableEntity;
-import org.eclipse.kapua.model.id.KapuaId;
-import org.eclipse.kapua.model.id.KapuaIdAdapter;
+import org.eclipse.kapua.service.authorization.subject.Subject;
 
 /**
  * Access info entity definition.<br>
- * It contains all authorization accesses for a {@link User}.<br>
- * It refers to the {@link User} entity by the {@link AccessInfo#getUserId()} property.<br>
+ * It contains all authorization accesses for a {@link Subject}.<br>
+ * It refers to the {@link Subject} entity by the {@link AccessInfo#getSubject()} property.<br>
  * <br>
- * {@link AccessInfo} is unique by the {@link AccessInfo#getUserId()} property.
+ * {@link AccessInfo} is unique by the {@link AccessInfo#getSubject()} property.
  * 
  * @since 1.0.0
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "userId" }, //
+@XmlType(propOrder = { "subject" }, //
         factoryClass = AccessInfoXmlRegistry.class, factoryMethod = "newAccessInfo")
 public interface AccessInfo extends KapuaUpdatableEntity {
 
@@ -45,22 +43,20 @@ public interface AccessInfo extends KapuaUpdatableEntity {
     }
 
     /**
-     * Gets the user id.
+     * Returns the {@link Subject} of this {@link AccessInfo}.
      * 
-     * @return The user id.
+     * @return The {@link Subject} of this {@link AccessInfo}.
      * @since 1.0.0
      */
-    @XmlElement(name = "userId")
-    @XmlJavaTypeAdapter(KapuaIdAdapter.class)
-    public KapuaId getUserId();
+    @XmlElement(name = "subject")
+    public Subject getSubject();
 
     /**
-     * Sets the user id.
+     * Sets the {@link Subject} of this {@link AccessInfo}.
      * 
-     * @param userId
-     *            The user id.
+     * @param subject
+     *            The {@link Subject} of this {@link AccessInfo}.
      * @since 1.0.0
      */
-    public void setUserId(KapuaId userId);
-
+    public void setSubject(Subject subject);
 }

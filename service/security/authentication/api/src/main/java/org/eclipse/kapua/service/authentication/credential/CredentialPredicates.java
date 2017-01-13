@@ -19,8 +19,9 @@ package org.eclipse.kapua.service.authentication.credential;
  */
 public class CredentialPredicates {
 
-    public static final String CREDENTIAL_SUBJECT_TYPE = "subjectType";
-    public static final String CREDENTIAL_SUBJECT_ID = "subjectId";
+    public static final String SUBJECT = "subject";
+    public static final String SUBJECT_TYPE = SUBJECT + ".subjectType";
+    public static final String SUBJECT_ID = SUBJECT + ".subjectId";
     public static final String TYPE = "type";
     public static final String KEY = "key";
 

@@ -14,17 +14,18 @@ package org.eclipse.kapua.service.authentication;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import org.eclipse.kapua.service.authentication.credential.CredentialSubjectType;
+import org.eclipse.kapua.service.authorization.subject.SubjectType;
 
 /**
  * Username and password {@link LoginCredentials} definition.
  * 
  * @since 1.0.0
- * 
  */
 @XmlRootElement(name = "usernamePasswordCredentials")
 @XmlAccessorType(XmlAccessType.PROPERTY)
@@ -37,7 +38,8 @@ public interface UsernamePasswordCredentials extends LoginCredentials {
      * @return The {@link CredentialSubjectType}.
      * @since 1.0.0
      */
-    public CredentialSubjectType getSubjectType();
+    @XmlTransient
+    public SubjectType getSubjectType();
 
     /**
      * Sets the {@link CredentialSubjectType}.
@@ -46,7 +48,7 @@ public interface UsernamePasswordCredentials extends LoginCredentials {
      *            The {@link CredentialSubjectType}.
      * @since 1.0.0
      */
-    public void setSubjectType(CredentialSubjectType subjectType);
+    public void setSubjectType(SubjectType subjectType);
 
     /**
      * Returns the username.
@@ -54,6 +56,7 @@ public interface UsernamePasswordCredentials extends LoginCredentials {
      * @return The username.
      * @since 1.0.0
      */
+    @XmlElement(name = "username")
     public String getUsername();
 
     /**
@@ -71,6 +74,7 @@ public interface UsernamePasswordCredentials extends LoginCredentials {
      * @since 1.0.0
      */
     @XmlJavaTypeAdapter(StringToCharArrayAdapter.class)
+    @XmlElement(name = "password")
     public char[] getPassword();
 
     /**

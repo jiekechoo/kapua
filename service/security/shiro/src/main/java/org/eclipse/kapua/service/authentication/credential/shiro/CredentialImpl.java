@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.eclipse.kapua.service.authentication.credential.shiro;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -26,11 +24,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.eclipse.kapua.commons.model.AbstractKapuaUpdatableEntity;
-import org.eclipse.kapua.commons.model.id.KapuaEid;
 import org.eclipse.kapua.model.id.KapuaId;
 import org.eclipse.kapua.service.authentication.credential.Credential;
-import org.eclipse.kapua.service.authentication.credential.CredentialSubjectType;
 import org.eclipse.kapua.service.authentication.credential.CredentialType;
+import org.eclipse.kapua.service.authorization.subject.Subject;
+import org.eclipse.kapua.service.authorization.subject.shiro.SubjectImpl;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -46,15 +44,8 @@ public class CredentialImpl extends AbstractKapuaUpdatableEntity implements Cred
 
     private static final long serialVersionUID = -7921424688644169175L;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "subject_type", updatable = false, nullable = false)
-    private CredentialSubjectType subjectType;
-
     @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "eid", column = @Column(name = "subject_id", updatable = false, nullable = false))
-    })
-    private KapuaEid subjectId;
+    private SubjectImpl subject;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", updatable = false, nullable = false)
@@ -76,51 +67,38 @@ public class CredentialImpl extends AbstractKapuaUpdatableEntity implements Cred
     }
 
     /**
-     * Constructor
+     * Constructor.
      * 
      * @param scopeId
-     * @param userId
+     * @param subject
      * @param type
-     * @param credentialKey
+     * @param key
+     * @param cryptedSecret
      */
     public CredentialImpl(KapuaId scopeId,//
-            CredentialSubjectType subjectType, //
-            KapuaId subjectId,//
+            Subject subject, //
             CredentialType type,//
             String key,//
             String cryptedSecret) //
     {
         super(scopeId);
-        setSubjectType(subjectType);
-        setSubjectId(subjectId);
-
+        setSubject(subject);
         setCredentialType(type);
         setKey(key);
         setSecret(cryptedSecret);
     }
 
     @Override
-    public CredentialSubjectType getSubjectType() {
-        return subjectType;
+    public Subject getSubject() {
+        return subject;
     }
 
     @Override
-    public void setSubjectType(CredentialSubjectType subjectType) {
-        this.subjectType = subjectType;
-
-    }
-
-    @Override
-    public KapuaId getSubjectId() {
-        return subjectId;
-    }
-
-    @Override
-    public void setSubjectId(KapuaId subjectId) {
-        if (subjectId != null) {
-            this.subjectId = new KapuaEid(subjectId);
+    public void setSubject(Subject subject) {
+        if (subject != null) {
+            this.subject = new SubjectImpl(subject);
         } else {
-            this.subjectId = null;
+            this.subject = null;
         }
     }
 

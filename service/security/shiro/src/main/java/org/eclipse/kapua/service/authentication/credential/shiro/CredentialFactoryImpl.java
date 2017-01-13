@@ -18,8 +18,8 @@ import org.eclipse.kapua.service.authentication.credential.Credential;
 import org.eclipse.kapua.service.authentication.credential.CredentialFactory;
 import org.eclipse.kapua.service.authentication.credential.CredentialListResult;
 import org.eclipse.kapua.service.authentication.credential.CredentialQuery;
-import org.eclipse.kapua.service.authentication.credential.CredentialSubjectType;
 import org.eclipse.kapua.service.authentication.credential.CredentialType;
+import org.eclipse.kapua.service.authorization.subject.SubjectType;
 
 /**
  * {@link CredentialFactory} implementation.
@@ -32,7 +32,7 @@ public class CredentialFactoryImpl implements CredentialFactory {
     @Override
     public CredentialCreatorImpl newCreator(
             KapuaId scopeId,
-            CredentialSubjectType subjectType,
+            SubjectType subjectType,
             KapuaId subjectId,
             CredentialType type,
             String key,

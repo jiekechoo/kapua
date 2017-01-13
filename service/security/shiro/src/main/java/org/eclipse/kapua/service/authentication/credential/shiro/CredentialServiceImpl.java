@@ -38,7 +38,6 @@ import org.eclipse.kapua.service.authentication.credential.CredentialListResult;
 import org.eclipse.kapua.service.authentication.credential.CredentialPredicates;
 import org.eclipse.kapua.service.authentication.credential.CredentialQuery;
 import org.eclipse.kapua.service.authentication.credential.CredentialService;
-import org.eclipse.kapua.service.authentication.credential.CredentialSubjectType;
 import org.eclipse.kapua.service.authentication.credential.CredentialType;
 import org.eclipse.kapua.service.authentication.shiro.AuthenticationEntityManagerFactory;
 import org.eclipse.kapua.service.authentication.shiro.setting.KapuaAuthenticationSetting;
@@ -47,6 +46,8 @@ import org.eclipse.kapua.service.authorization.AuthorizationService;
 import org.eclipse.kapua.service.authorization.domain.Domain;
 import org.eclipse.kapua.service.authorization.permission.Actions;
 import org.eclipse.kapua.service.authorization.permission.PermissionFactory;
+import org.eclipse.kapua.service.authorization.subject.Subject;
+import org.eclipse.kapua.service.authorization.subject.SubjectType;
 
 /**
  * {@link CredentialService} implementation using JPA and SQL database.
@@ -230,13 +231,12 @@ public class CredentialServiceImpl extends AbstractKapuaService implements Crede
     }
 
     @Override
-    public CredentialListResult findBySubject(KapuaId scopeId, CredentialSubjectType subjectType, KapuaId subjectId, CredentialType type)
+    public CredentialListResult findBySubject(KapuaId scopeId, Subject subject, CredentialType type)
             throws KapuaException {
         //
         // Argument Validation
         ArgumentValidator.notNull(scopeId, "scopeId");
-        ArgumentValidator.notNull(subjectType, "subjectType");
-        ArgumentValidator.notNull(subjectId, "subjectId");
+        ArgumentValidator.notNull(subject, "subject");
 
         //
         // Check Access
@@ -249,13 +249,10 @@ public class CredentialServiceImpl extends AbstractKapuaService implements Crede
         // Build query
         CredentialQuery query = new CredentialQueryImpl(scopeId);
 
-        KapuaPredicate subjectTypePredicate = new AttributePredicate<CredentialSubjectType>(CredentialPredicates.CREDENTIAL_SUBJECT_TYPE, subjectType);
-        KapuaPredicate subjectIdPredicate = new AttributePredicate<KapuaId>(CredentialPredicates.CREDENTIAL_SUBJECT_ID, subjectId);
+        KapuaPredicate subjectPredicate = new AttributePredicate<Subject>(CredentialPredicates.SUBJECT, subject);
 
         AndPredicate andPredicate = new AndPredicate();
-        andPredicate.and(subjectTypePredicate);
-        andPredicate.and(subjectIdPredicate);
-
+        andPredicate.and(subjectPredicate);
         if (type != null) {
             KapuaPredicate typePredicate = new AttributePredicate<CredentialType>(CredentialPredicates.TYPE, type);
             andPredicate.and(typePredicate);
@@ -269,11 +266,12 @@ public class CredentialServiceImpl extends AbstractKapuaService implements Crede
     }
 
     @Override
-    public Credential findByKey(CredentialSubjectType subjectType, String apiKey) throws KapuaException {
+    public Credential findByKey(SubjectType subjectType, CredentialType type, String key) throws KapuaException {
         //
         // Argument Validation
         ArgumentValidator.notNull(subjectType, "subjectType");
-        ArgumentValidator.notEmptyOrNull(apiKey, "apiKey");
+        ArgumentValidator.notNull(type, "type");
+        ArgumentValidator.notEmptyOrNull(key, "apiKey");
 
         //
         // Do the find
@@ -283,15 +281,16 @@ public class CredentialServiceImpl extends AbstractKapuaService implements Crede
 
             //
             // Build search query
-            KapuaAuthenticationSetting setting = KapuaAuthenticationSetting.getInstance();
-            int keyLength = setting.getInt(KapuaAuthenticationSettingKeys.AUTHENTICATION_CREDENTIAL_APIKEY_KEY_LENGTH);
-            String apiKeyValue = apiKey.substring(0, keyLength);
+            String keyToSearch = key;
+            if (CredentialType.API_KEY.equals(type)) {
+                KapuaAuthenticationSetting setting = KapuaAuthenticationSetting.getInstance();
+                int keyLength = setting.getInt(KapuaAuthenticationSettingKeys.AUTHENTICATION_CREDENTIAL_APIKEY_KEY_LENGTH);
+                keyToSearch = key.substring(0, keyLength);
+            }
 
-            //
-            // Build query
-            AttributePredicate<CredentialSubjectType> subjectTypePredicate = new AttributePredicate<>(CredentialPredicates.CREDENTIAL_SUBJECT_TYPE, CredentialSubjectType.USER);
-            AttributePredicate<CredentialType> typePredicate = new AttributePredicate<>(CredentialPredicates.TYPE, subjectType);
-            AttributePredicate<String> keyPredicate = new AttributePredicate<>(CredentialPredicates.KEY, apiKeyValue);
+            KapuaPredicate subjectTypePredicate = new AttributePredicate<>(CredentialPredicates.SUBJECT_TYPE, subjectType);
+            KapuaPredicate typePredicate = new AttributePredicate<>(CredentialPredicates.TYPE, type);
+            KapuaPredicate keyPredicate = new AttributePredicate<>(CredentialPredicates.KEY, keyToSearch);
 
             AndPredicate andPredicate = new AndPredicate();
             andPredicate.and(subjectTypePredicate);
@@ -374,14 +373,14 @@ public class CredentialServiceImpl extends AbstractKapuaService implements Crede
     }
 
     @SuppressWarnings("unused")
-    private long countExistingCredentials(KapuaId scopeId, CredentialSubjectType subjectType, KapuaId subjectId, CredentialType type)
+    private long countExistingCredentials(KapuaId scopeId, SubjectType subjectType, KapuaId subjectId, CredentialType type)
             throws KapuaException {
         KapuaLocator locator = KapuaLocator.getInstance();
         CredentialFactory credentialFactory = locator.getFactory(CredentialFactory.class);
 
-        AttributePredicate<CredentialSubjectType> subjectTypePredicate = new AttributePredicate<>(CredentialPredicates.CREDENTIAL_SUBJECT_TYPE, subjectType);
-        AttributePredicate<KapuaId> subjectIdPredicate = new AttributePredicate<>(CredentialPredicates.CREDENTIAL_SUBJECT_ID, subjectId);
-        AttributePredicate<CredentialType> typePredicate = new AttributePredicate<>(CredentialPredicates.TYPE, type);
+        KapuaPredicate subjectTypePredicate = new AttributePredicate<>(CredentialPredicates.SUBJECT_TYPE, subjectType);
+        KapuaPredicate subjectIdPredicate = new AttributePredicate<>(CredentialPredicates.SUBJECT_ID, subjectId);
+        KapuaPredicate typePredicate = new AttributePredicate<>(CredentialPredicates.TYPE, type);
 
         AndPredicate andPredicate = new AndPredicate();
         andPredicate.and(subjectTypePredicate);

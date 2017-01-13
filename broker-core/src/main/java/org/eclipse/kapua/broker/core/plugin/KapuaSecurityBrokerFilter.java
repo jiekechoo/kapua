@@ -66,6 +66,7 @@ import org.eclipse.kapua.service.authorization.AuthorizationService;
 import org.eclipse.kapua.service.authorization.domain.Domain;
 import org.eclipse.kapua.service.authorization.permission.Actions;
 import org.eclipse.kapua.service.authorization.permission.PermissionFactory;
+import org.eclipse.kapua.service.authorization.subject.SubjectType;
 import org.eclipse.kapua.service.datastore.DatastoreDomain;
 import org.eclipse.kapua.service.device.management.commons.DeviceManagementDomain;
 import org.eclipse.kapua.service.device.registry.connection.DeviceConnection;
@@ -315,7 +316,7 @@ public class KapuaSecurityBrokerFilter extends BrokerFilter {
             loginPreCheckTimeContext.stop();
 
             Context loginShiroLoginTimeContext = metricLoginShiroLoginTime.time();
-            LoginCredentials credentials = credentialsFactory.newUsernamePasswordCredentials(username, password.toCharArray());
+            LoginCredentials credentials = credentialsFactory.newUsernamePasswordCredentials(SubjectType.DEVICE, username, password.toCharArray());
             AccessToken accessToken = authenticationService.login(credentials);
 
             KapuaId scopeId = accessToken.getScopeId();

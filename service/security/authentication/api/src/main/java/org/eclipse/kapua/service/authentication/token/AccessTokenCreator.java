@@ -26,7 +26,7 @@ import org.eclipse.kapua.model.id.KapuaId;
 import org.eclipse.kapua.model.id.KapuaIdAdapter;
 import org.eclipse.kapua.service.authentication.credential.Credential;
 import org.eclipse.kapua.service.authentication.credential.CredentialCreator;
-import org.eclipse.kapua.service.authentication.credential.CredentialSubjectType;
+import org.eclipse.kapua.service.authorization.subject.SubjectType;
 
 /**
  * {@link AccessToken} creator definition.
@@ -46,22 +46,22 @@ import org.eclipse.kapua.service.authentication.credential.CredentialSubjectType
 public interface AccessTokenCreator extends KapuaEntityCreator<AccessToken> {
 
     /**
-     * Returns the {@link CredentialSubjectType} of this {@link CredentialCreator}.
+     * Returns the {@link SubjectType} of this {@link CredentialCreator}.
      * 
-     * @return The {@link CredentialSubjectType} of this {@link CredentialCreator}.
+     * @return The {@link SubjectType} of this {@link CredentialCreator}.
      * @since 1.0.0
      */
     @XmlElement(name = "subjectType")
-    public CredentialSubjectType getSubjectType();
+    public SubjectType getSubjectType();
 
     /**
-     * Sets the {@link CredentialSubjectType} of this {@link CredentialCreator}.
+     * Sets the {@link SubjectType} of this {@link CredentialCreator}.
      * 
      * @param subjectType
-     *            The {@link CredentialSubjectType} of this {@link CredentialCreator}.
+     *            The {@link SubjectType} of this {@link CredentialCreator}.
      * @since 1.0.0
      */
-    public void setSubjectType(CredentialSubjectType subjectType);
+    public void setSubjectType(SubjectType subjectType);
 
     /**
      * Return the {@link Credential} subject id.

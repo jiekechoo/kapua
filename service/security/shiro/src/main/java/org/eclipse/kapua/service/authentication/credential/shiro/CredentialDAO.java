@@ -15,6 +15,7 @@ package org.eclipse.kapua.service.authentication.credential.shiro;
 import org.eclipse.kapua.KapuaException;
 import org.eclipse.kapua.commons.jpa.EntityManager;
 import org.eclipse.kapua.commons.service.internal.ServiceDAO;
+import org.eclipse.kapua.locator.KapuaLocator;
 import org.eclipse.kapua.model.id.KapuaId;
 import org.eclipse.kapua.model.query.KapuaQuery;
 import org.eclipse.kapua.service.authentication.credential.Credential;
@@ -22,6 +23,7 @@ import org.eclipse.kapua.service.authentication.credential.CredentialCreator;
 import org.eclipse.kapua.service.authentication.credential.CredentialListResult;
 import org.eclipse.kapua.service.authentication.shiro.utils.AuthenticationUtils;
 import org.eclipse.kapua.service.authentication.shiro.utils.CryptAlgorithm;
+import org.eclipse.kapua.service.authorization.subject.SubjectFactory;
 
 /**
  * Credential DAO.
@@ -48,9 +50,10 @@ public class CredentialDAO extends ServiceDAO {
 
         //
         // Create Credential
+        SubjectFactory subjectFactory = KapuaLocator.getInstance().getFactory(SubjectFactory.class);
+
         CredentialImpl credentialImpl = new CredentialImpl(credentialCreator.getScopeId(),
-                credentialCreator.getSubjectType(),
-                credentialCreator.getSubjectId(),
+                subjectFactory.newSubject(credentialCreator.getSubjectType(), credentialCreator.getSubjectId()),
                 credentialCreator.getType(),
                 credentialCreator.getKey(),
                 cryptedCredential);

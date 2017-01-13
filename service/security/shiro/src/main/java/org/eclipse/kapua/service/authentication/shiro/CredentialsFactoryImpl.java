@@ -18,19 +18,19 @@ import org.eclipse.kapua.service.authentication.ApiKeyCredentials;
 import org.eclipse.kapua.service.authentication.CredentialsFactory;
 import org.eclipse.kapua.service.authentication.JwtCredentials;
 import org.eclipse.kapua.service.authentication.UsernamePasswordCredentials;
-import org.eclipse.kapua.service.authentication.credential.CredentialSubjectType;
+import org.eclipse.kapua.service.authorization.subject.SubjectType;
 
 /**
  * {@link CredentialsFactory} factory implementation.
  * 
- * @since 1.0
+ * @since 1.0.0
  * 
  */
 @KapuaProvider
 public class CredentialsFactoryImpl implements CredentialsFactory {
 
     @Override
-    public UsernamePasswordCredentials newUsernamePasswordCredentials(CredentialSubjectType subjectType, String username, char[] password) {
+    public UsernamePasswordCredentials newUsernamePasswordCredentials(SubjectType subjectType, String username, char[] password) {
         return new UsernamePasswordCredentialsImpl(subjectType, username, password);
     }
 

@@ -16,8 +16,8 @@ import org.eclipse.kapua.commons.model.AbstractKapuaEntityCreator;
 import org.eclipse.kapua.model.id.KapuaId;
 import org.eclipse.kapua.service.authentication.credential.Credential;
 import org.eclipse.kapua.service.authentication.credential.CredentialCreator;
-import org.eclipse.kapua.service.authentication.credential.CredentialSubjectType;
 import org.eclipse.kapua.service.authentication.credential.CredentialType;
+import org.eclipse.kapua.service.authorization.subject.SubjectType;
 
 /**
  * {@link CredentialCreator} implementation.
@@ -28,7 +28,7 @@ public class CredentialCreatorImpl extends AbstractKapuaEntityCreator<Credential
 
     private static final long serialVersionUID = -5020680413729882095L;
 
-    private CredentialSubjectType subjectType;
+    private SubjectType subjectType;
     private KapuaId subjectId;
     private CredentialType type;
     private String key;
@@ -40,7 +40,7 @@ public class CredentialCreatorImpl extends AbstractKapuaEntityCreator<Credential
      * @param scopeId
      *            The scope id in which create the {@link Credential}.
      * @param subjectType
-     *            The {@link CredentialSubjectType} for which create the {@link Credential}.
+     *            The {@link SubjectType} for which create the {@link Credential}.
      * @param subjectId
      *            The subject id for which create the {@link Credential}.
      * @param type
@@ -52,7 +52,7 @@ public class CredentialCreatorImpl extends AbstractKapuaEntityCreator<Credential
      * @since 1.0.0
      */
     public CredentialCreatorImpl(KapuaId scopeId, //
-            CredentialSubjectType subjectType,
+            SubjectType subjectType,
             KapuaId subjectId,//
             CredentialType type, //
             String key,
@@ -67,42 +67,52 @@ public class CredentialCreatorImpl extends AbstractKapuaEntityCreator<Credential
         setPlainSecret(plainSecret);
     }
 
-    public CredentialSubjectType getSubjectType() {
+    @Override
+    public SubjectType getSubjectType() {
         return subjectType;
     }
 
-    public void setSubjectType(CredentialSubjectType subjectType) {
+    @Override
+    public void setSubjectType(SubjectType subjectType) {
         this.subjectType = subjectType;
     }
 
+    @Override
     public KapuaId getSubjectId() {
         return subjectId;
     }
 
+    @Override
     public void setSubjectId(KapuaId subjectId) {
         this.subjectId = subjectId;
     }
 
+    @Override
     public CredentialType getType() {
         return type;
     }
 
+    @Override
     public void setType(CredentialType type) {
         this.type = type;
     }
 
+    @Override
     public String getKey() {
         return key;
     }
 
+    @Override
     public void setKey(String key) {
         this.key = key;
     }
 
+    @Override
     public String getPlainSecret() {
         return plainSecret;
     }
 
+    @Override
     public void setPlainSecret(String plainSecret) {
         this.plainSecret = plainSecret;
     }

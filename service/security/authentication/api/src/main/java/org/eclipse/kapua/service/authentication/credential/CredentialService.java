@@ -16,6 +16,8 @@ import org.eclipse.kapua.KapuaException;
 import org.eclipse.kapua.model.id.KapuaId;
 import org.eclipse.kapua.service.KapuaEntityService;
 import org.eclipse.kapua.service.KapuaUpdatableEntityService;
+import org.eclipse.kapua.service.authorization.subject.Subject;
+import org.eclipse.kapua.service.authorization.subject.SubjectType;
 
 /**
  * {@link Credential} service definition.
@@ -25,14 +27,12 @@ import org.eclipse.kapua.service.KapuaUpdatableEntityService;
 public interface CredentialService extends KapuaEntityService<Credential, CredentialCreator>, KapuaUpdatableEntityService<Credential> {
 
     /**
-     * Returns the {@link CredentialListResult} searching by the {@link CredentialSubjectType} and the subject {@link KapuaId}.
+     * Returns the {@link CredentialListResult} searching by the {@link SubjectType} and the subject {@link KapuaId}.
      * 
      * @param scopeId
      *            The scope id in which to search.
-     * @param subjectType
-     *            The {@link CredentialSubjectType} to filter results.
-     * @param subjectId
-     *            The subject {@link KapuaId} to filter results.
+     * @param subject
+     *            The {@link Subject} to filter results.
      * @param type
      *            The {@link CredentialType} to filter results. Optional.
      * 
@@ -41,14 +41,14 @@ public interface CredentialService extends KapuaEntityService<Credential, Creden
      * 
      * @since 1.0.0
      */
-    public CredentialListResult findBySubject(KapuaId scopeId, CredentialSubjectType subjectType, KapuaId subjectId, CredentialType type)
+    public CredentialListResult findBySubject(KapuaId scopeId, Subject subject, CredentialType type)
             throws KapuaException;
 
     /**
      * Returns the {@link Credential} found for the given parameters.
      * 
      * @param subjectType
-     *            The {@link CredentialSubjectType} to match.
+     *            The {@link SubjectType} to match.
      * @param type
      *            The {@link CredentialType} to match.
      * @param key
@@ -57,5 +57,5 @@ public interface CredentialService extends KapuaEntityService<Credential, Creden
      * @throws KapuaException
      * @since 1.0.0
      */
-    public Credential findByKey(CredentialSubjectType subjectType, CredentialType type, String key) throws KapuaException;
+    public Credential findByKey(SubjectType subjectType, CredentialType type, String key) throws KapuaException;
 }

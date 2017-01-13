@@ -25,8 +25,8 @@ import org.eclipse.kapua.locator.KapuaLocator;
 import org.eclipse.kapua.model.id.KapuaId;
 import org.eclipse.kapua.service.authentication.AuthenticationService;
 import org.eclipse.kapua.service.authentication.CredentialsFactory;
-import org.eclipse.kapua.service.authentication.credential.CredentialSubjectType;
-import org.junit.AfterClass;
+import org.eclipse.kapua.service.authorization.subject.SubjectType;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.slf4j.Logger;
@@ -45,7 +45,7 @@ public class KapuaTest extends Assert {
     protected static KapuaId adminScopeId;
 
     @Before
-    public void setUp() {
+    public void setUpTest() {
 
         LOG.debug("Setting up test...");
         if (!isInitialized) {
@@ -58,12 +58,12 @@ public class KapuaTest extends Assert {
 
                 AuthenticationService authenticationService = locator.getService(AuthenticationService.class);
                 CredentialsFactory credentialsFactory = locator.getFactory(CredentialsFactory.class);
-                authenticationService.login(credentialsFactory.newUsernamePasswordCredentials(CredentialSubjectType.USER, username, password.toCharArray()));
+                authenticationService.login(credentialsFactory.newUsernamePasswordCredentials(SubjectType.USER, username, password.toCharArray()));
 
                 //
                 // Get current user Id
-                adminUserId = KapuaSecurityUtils.getSession().getUserId();
                 adminScopeId = KapuaSecurityUtils.getSession().getScopeId();
+                adminUserId = KapuaSecurityUtils.getSession().getSubject().getId();
             } catch (KapuaException exc) {
                 exc.printStackTrace();
             }
@@ -71,19 +71,35 @@ public class KapuaTest extends Assert {
         }
     }
 
-    @AfterClass
-    public static void tearDown() {
-        LOG.debug("Stopping Kapua test context.");
-        isInitialized = false;
-        try {
-            KapuaLocator locator = KapuaLocator.getInstance();
-            AuthenticationService authenticationService = locator.getService(AuthenticationService.class);
+    @After
+    public void tearDownTest() {
 
-            authenticationService.logout();
-        } catch (KapuaException exc) {
-            exc.printStackTrace();
+        LOG.debug("Tearing down test...");
+        if (isInitialized) {
+            LOG.debug("Kapua test context is not initialized. Initializing...");
+            try {
+                AuthenticationService authenticationService = locator.getService(AuthenticationService.class);
+                authenticationService.logout();
+            } catch (KapuaException exc) {
+                exc.printStackTrace();
+            }
+            isInitialized = false;
         }
     }
+
+    // @AfterClass
+    // public static void tearDown() {
+    // LOG.debug("Stopping Kapua test context.");
+    // isInitialized = false;
+    // try {
+    // KapuaLocator locator = KapuaLocator.getInstance();
+    // AuthenticationService authenticationService = locator.getService(AuthenticationService.class);
+    //
+    // authenticationService.logout();
+    // } catch (KapuaException exc) {
+    // exc.printStackTrace();
+    // }
+    // }
 
     //
     // Test utility methods

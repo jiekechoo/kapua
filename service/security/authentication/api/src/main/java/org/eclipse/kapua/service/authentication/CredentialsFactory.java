@@ -13,7 +13,7 @@
 package org.eclipse.kapua.service.authentication;
 
 import org.eclipse.kapua.model.KapuaObjectFactory;
-import org.eclipse.kapua.service.authentication.credential.CredentialSubjectType;
+import org.eclipse.kapua.service.authorization.subject.SubjectType;
 
 /**
  * {@link Credentials} factory definition.
@@ -33,7 +33,7 @@ public interface CredentialsFactory extends KapuaObjectFactory {
      * 
      * @since 1.0.0
      */
-    public UsernamePasswordCredentials newUsernamePasswordCredentials(CredentialSubjectType subjectType, String username, char[] password);
+    public UsernamePasswordCredentials newUsernamePasswordCredentials(SubjectType subjectType, String username, char[] password);
 
     /**
      * Creates a new {@link ApiKeyCredentials} instance based on provided api key

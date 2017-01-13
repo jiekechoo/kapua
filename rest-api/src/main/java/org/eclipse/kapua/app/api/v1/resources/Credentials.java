@@ -34,7 +34,6 @@ import org.eclipse.kapua.service.authentication.credential.CredentialCreator;
 import org.eclipse.kapua.service.authentication.credential.CredentialFactory;
 import org.eclipse.kapua.service.authentication.credential.CredentialListResult;
 import org.eclipse.kapua.service.authentication.credential.CredentialService;
-import org.eclipse.kapua.service.authentication.credential.CredentialSubjectType;
 import org.eclipse.kapua.service.authentication.credential.shiro.CredentialImpl;
 
 import io.swagger.annotations.Api;
@@ -84,7 +83,7 @@ public class Credentials extends AbstractKapuaResource {
         try {
             KapuaId id = KapuaEid.parseCompactId(userId);
             KapuaSession session = KapuaSecurityUtils.getSession();
-            credentialsListResult = (CredentialListResult) credentialService.findBySubject(session.getScopeId(), CredentialSubjectType.USER, id, null);
+            credentialsListResult = (CredentialListResult) credentialService.findBySubject(session.getScopeId(), session.getSubject(), null);
         } catch (Throwable t) {
             handleException(t);
         }

@@ -91,16 +91,16 @@ public class UserDAO extends ServiceDAO {
         return em.find(UserImpl.class, userId);
     }
 
-    // /**
-    // * Finds the user by name
-    // *
-    // * @param em
-    // * @param name
-    // * @return
-    // */
-    // public static User findByName(EntityManager em, String name) {
-    // return ServiceDAO.findByField(em, UserImpl.class, "name", name);
-    // }
+    /**
+     * Finds the {@link User} by name
+     *
+     * @param em
+     * @param name
+     * @return
+     */
+    public static User findByName(EntityManager em, String name) {
+        return ServiceDAO.findByField(em, UserImpl.class, "name", name);
+    }
 
     /**
      * Returns the user list matching the provided query

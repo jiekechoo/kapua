@@ -172,25 +172,25 @@ public class UserServiceImpl extends AbstractKapuaConfigurableService implements
         return entityManagerSession.onResult(em -> UserDAO.find(em, userId));
     }
 
-    // @Override
-    // public User findByName(String name)
-    // throws KapuaException {
-    // // Validation of the fields
-    // ArgumentValidator.notEmptyOrNull(name, "name");
-    //
-    // // Do the find
-    // return entityManagerSession.onResult(em -> {
-    // User user = UserDAO.findByName(em, name);
-    // //
-    // // Check Access
-    // if (user != null) {
-    // AuthorizationService authorizationService = locator.getService(AuthorizationService.class);
-    // PermissionFactory permissionFactory = locator.getFactory(PermissionFactory.class);
-    // authorizationService.checkPermission(permissionFactory.newPermission(userDomain, Actions.read, user.getScopeId()));
-    // }
-    // return user;
-    // });
-    // }
+    @Override
+    public User findByName(String name)
+            throws KapuaException {
+        // Validation of the fields
+        ArgumentValidator.notEmptyOrNull(name, "name");
+
+        // Do the find
+        return entityManagerSession.onResult(em -> {
+            User user = UserDAO.findByName(em, name);
+            //
+            // Check Access
+            if (user != null) {
+                AuthorizationService authorizationService = locator.getService(AuthorizationService.class);
+                PermissionFactory permissionFactory = locator.getFactory(PermissionFactory.class);
+                authorizationService.checkPermission(permissionFactory.newPermission(userDomain, Actions.read, user.getScopeId()));
+            }
+            return user;
+        });
+    }
 
     @Override
     public UserListResult query(KapuaQuery<User> query)
